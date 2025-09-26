@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>2048 GUI</title>
+<style>
+  body{font-family:system-ui;margin:0;background:#faf8ef;display:flex;min-height:100vh;align-items:center;justify-content:center}
+  .wrap{width:420px;text-align:center}
+  pre{background:#111;color:#eee;padding:12px;border-radius:8px;overflow:auto;height:360px}
+  .buttons{margin:8px 0;display:flex;gap:8px;justify-content:center}
+  button{padding:6px 10px;border:0;border-radius:6px;background:#8f7a66;color:#fff;font-weight:700;cursor:pointer}
+</style>
+<div class="wrap">
+  <h2>2048 (Assembly)</h2>
+  <pre id="log"></pre>
+  <div class="buttons">
+    <button data-k="w">↑</button><button data-k="a">←</button>
+    <button data-k="s">↓</button><button data-k="d">→</button>
+  </div>
+  <p>Use arrow keys or WASD.</p>
+</div>
+<script>
+const log = document.getElementById("log");
+const ws = new WebSocket(`ws://${location.host}`);
+ws.onmessage = e => {
+  // Append each line the assembly prints (your printboard output)
+  log.textContent += e.data + "\n";
+  log.scrollTop = log.scrollHeight;
+};
+document.addEventListener("keydown", e => {
+  const k = e.key.toLowerCase();
+  if (["arrowup","w"].includes(k)) ws.send("w");
+  if (["arrowleft","a"].includes(k)) ws.send("a");
+  if (["arrowdown","s"].includes(k)) ws.send("s");
+  if (["arrowright","d"].includes(k)) ws.send("d");
+});
+document.querySelectorAll("button").forEach(b=>{
+  b.onclick = ()=> ws.send(b.dataset.k);
+});
+</script>

@@ -10,6 +10,7 @@ three : .asciiz "    "
 two : .asciiz "   "
 one : .asciiz "  "
 space: .asciiz " "
+clear: .asciiz "\x1b[2J"   # ESC[2J clears, ESC[H moves cursor to top-left
 #
 #a0 Address of the first field of the board
 #
